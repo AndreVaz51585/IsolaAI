@@ -37,12 +37,18 @@ printList([H | T]) :-
 
 
 % Função responsável por imprimir a tabela, linha por linha
-
 printTable([]).
 
-printTable([Row | Tail]) :-
-	printList(Row), 
-	printTable(Tail).
+printTable(Table) :-
+    write('  0 1 2'), nl,
+    print_rows(Table, 0).
+
+print_rows([], _).
+print_rows([Row | Tail], RowIdx) :-
+    write(RowIdx), write(' '),
+    printList(Row),
+    NextRowIdx is RowIdx + 1,
+    print_rows(Tail, NextRowIdx).
 
 
 % Função responsável por alternar o jogador atual
@@ -111,8 +117,51 @@ has_moves(Player, Table, Row, Col) :-
     adjacent(PlayerRow, PlayerCol, Row, Col),
     cell(Table, Row, Col, .).
 
-read_moves(MoveCor, RemoveCords) :-
+
+parse_coordinates(Row/Col, Row, Col).
+
+read_moves(MoveCords, RemoveCords) :-
     write('Move (linha/coluna, ex: 1/2): '),
-    read(MoveCor),
-    write('Remove uma casa (linha/coluna): '),
-    read(RemoveCords).       
+    read(MoveInput),
+    parse_coordinates(MoveInput, MoveRow, MoveCol),
+    MoveCords = MoveRow/MoveCol,
+    write('Remove uma casa (linha/coluna,): '),
+    read(RemoveInput),
+    parse_coordinates(RemoveInput, RemoveRow, RemoveCol),
+    RemoveCords = RemoveRow/RemoveCol.
+
+
+
+
+
+play(Board, Player, NewBoard) :-
+    (
+        \+ has_moves(Player, Board, _, _)
+    ->
+        opponent(Player, Winner),
+        printTable(Board),
+        write('JOGADOR '), write(Winner), write(' Venceu!'), nl,
+        NewBoard = Board
+    ;
+        printTable(Board),
+        write('--- VEZ DO JOGADOR '), write(Player), write(' ---'), nl,
+        read_moves(MoveRow/MoveCol, RemoveRow/RemoveCol),
+        (
+            valid_move(Player, Board, MoveRow, MoveCol)
+        ->
+            apply_move(Player, Board, MoveRow, MoveCol, BoardAfterMove),
+            (
+                valid_remove(Player, BoardAfterMove, RemoveRow, RemoveCol)
+            ->
+                apply_remove(Player, BoardAfterMove, RemoveRow, RemoveCol, BoardAfterRemove),
+                opponent(Player, NextPlayer),
+                play(BoardAfterRemove, NextPlayer, NewBoard)
+            ;
+                write('Remocao invalida! Tenta novamente.'), nl,
+                play(Board, Player, NewBoard)
+            )
+        ;
+            write('Movimento invalido! Tenta novamente.'), nl,
+            play(Board, Player, NewBoard)
+        )
+    ).
