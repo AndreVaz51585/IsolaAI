@@ -139,7 +139,7 @@ play(Board, Player, NewBoard) :-
         \+ has_moves(Player, Board, _, _)
     ->
         opponent(Player, Winner),
-        printTable(Board),
+        printTable(Board),                                        % Imprime tabuleiro.
         write('JOGADOR '), write(Winner), write(' Venceu!'), nl,
         NewBoard = Board
     ;
