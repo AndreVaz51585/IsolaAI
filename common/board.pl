@@ -1,8 +1,14 @@
+:- module(board, [
+    createTable/1,
+    replaceTable/5,
+    printTable/1
+]).
+
 replace(Idx, List, Value, NewList) :-
 	replaceAux(0, Idx, List, Value, NewList).
 
 
-replaceAux(Idx, Idx, [H | Tail], Value, [Value | Tail]). % Idx =:= Idx
+replaceAux(Idx, Idx, [_ | Tail], Value, [Value | Tail]). % Idx =:= Idx
 
 replaceAux(Idx1, Idx, [H | Tail], Value, [H | NewTail]) :-
 	Idx1 =\= Idx, % Idx1 != Idx 
@@ -12,9 +18,12 @@ replaceAux(Idx1, Idx, [H | Tail], Value, [H | NewTail]) :-
 
 
 createTable(Table) :- 
-Table = [[., ., .], 
-            [., ., .],
-            [., ., .]]. 
+Table = [['.', '.', '.', '.', '.', '.'], 
+         ['.', '.', '.', '.', '.', '.'],
+         ['.', '.', '.', '.', '.', '.'],
+         ['.', '.', '.', '.', '.', '.'],
+         ['.', '.', '.', '.', '.', '.'],
+         ['.', '.', '.', '.', '.', '.']]. 
 
 
 
@@ -40,7 +49,7 @@ printList([H | T]) :-
 printTable([]).
 
 printTable(Table) :-
-    write('  0 1 2'), nl,
+    write('  0 1 2 3 4 5'), nl,
     print_rows(Table, 0).
 
 print_rows([], _).
