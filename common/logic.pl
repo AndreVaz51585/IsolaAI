@@ -1,5 +1,3 @@
-
-
 :- module(logic, [
 	opponent/2,
     find_player/4,
