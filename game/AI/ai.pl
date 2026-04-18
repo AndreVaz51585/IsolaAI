@@ -74,7 +74,8 @@ moves(pos(Board, Player, _), PosList) :-
             opponent(Player, NextPlayer)                       
         ),
         PosList
-    ).
+    ),
+    PosList \= [].
 
 % Função heurística (avaliação estática)
 staticval(pos(Board, Player, _), Val) :-
@@ -99,6 +100,7 @@ play_ai(Board, Player)  :-
     Player == x, !,
     write('--- Player (x) turn ---'), nl,
     human_turn(Board, Player, BoardAfterRemove),
+    !, % Impede que escolhas passadas do menu/humano sejam invocadas após turnos de interregno
     opponent(Player, NextPlayer),
     ( \+ has_moves(NextPlayer, BoardAfterRemove) ->
         printTable(BoardAfterRemove),
@@ -116,9 +118,15 @@ play_ai(Board, Player)  :-
     write('--- AI (o) turn ---'), nl,
     
     InitialPos = pos(Board, o, []),
-    MaxLevel = 5, 
+    MaxLevel = 2, 
     
-    alphabeta(InitialPos, -9999, 9999, pos(_, _, BestMoveInfo), Value, 0, MaxLevel),
+    ( alphabeta(InitialPos, -9999, 9999, pos(_, _, BestMoveInfo), Value, 0, MaxLevel) ->
+        true
+    ;
+        write('Congratulion! You won!'), nl,
+        !, fail
+    ),
+    !, 
     
     BestMoveInfo = [MRow, MCol, RRow, RCol],
     write('AI moved to: '), write([MRow, MCol]), nl,

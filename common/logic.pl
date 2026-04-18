@@ -60,9 +60,9 @@ apply_move(Row, Col, Player, Board, NewBoard) :-
 
 %Função que verifica vitoria, se der false é porque perdeu
 has_moves(Player, Board) :-     			
-	valid_move(_, _, Player, Board), !.
-
-
+    findall([R, C], valid_move(R, C, Player, Board), Moves),
+    Moves \= [].
+	
 % Função que valida a remoção de uma peça, verificando se a célula está vazia
 valid_remove(Row,Col,Board) :-
 	cell(Row, Col, Board, '.'). % Verifica se a célula está vazia (representada por '.')	

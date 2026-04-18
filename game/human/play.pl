@@ -21,6 +21,7 @@ human_turn(Board, Player, BoardAfterRemove) :-
 
 % Ciclo principal do jogo play(Board Atual, Jogador Atual)
 play(Board, Player) :-
+    print_turn_message(Player),
     human_turn(Board, Player, BoardAfterRemove),
     opponent(Player, NextPlayer),
     ( \+ has_moves(NextPlayer, BoardAfterRemove) ->

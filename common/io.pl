@@ -10,7 +10,7 @@
 read_coords(Message, X, Y) :-
     write(Message),
     write(' (line/col, ex: 1/2): '),
-    read(X/Y).
+    catch(read(X/Y), _, fail).
 
 % Função generica para ler as coordenadas de movimento e remoção do utilizador
 read_turn(XMove,YMove,XRemove,YRemove) :-
@@ -25,6 +25,6 @@ printTurnMessage(Player) :-
     write('--------------------'), nl,
     write('PLAYER '), write(Player), write('\'s TURN'), nl.
 
-    
+
 switchTurnPlayer(NextPlayer) :-
      write('--- PLAYER '), write(NextPlayer), write('\'s TURN ---'), nl.

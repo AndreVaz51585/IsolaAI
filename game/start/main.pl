@@ -19,8 +19,10 @@ read_game_mode(Board,Player) :-
     write('Do you want to play against the AI? (y/n):'), nl,
     read(Answer),
     ( Answer == y ->
+        write('You chose to play against the AI.'), nl,
         play_ai(Board, Player)
     ; Answer == n ->
+        write('You chose to play against another human.'), nl,
         play(Board, Player)
     ;   
         write('Invalid answer. Please respond with y. or n.'), nl,
